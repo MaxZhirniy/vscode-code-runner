@@ -1,3 +1,9 @@
+### 0.12.21 (2024-10-01)
+* Add support for run Executable files
+* Add function to run code in the terminal without changing global settings
+* Add a configuration entry to specify whether the output tab should be shown while the code is running. 
+* Add configuration "decodeMap" for set the decoding of the output for each language. You can also select a standard encoding in defaultDecode
+
 ### 0.12.2 (2024-04-05)
 * Add support for Erlang
 * Add support for SPWN
