@@ -35,6 +35,7 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
 * Set default language to run
 * Select language to run
 * Support REPL by running code in Integrated Terminal
+* Run executable files
 
 ## Usages
 
@@ -56,7 +57,9 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
 
 ![Usage](images/usageRunByLanguage.gif)
 
-* To run custom command, then use shortcut `Ctrl+Alt+K`, or press `F1` and then select/type `Run Custom Command`
+* To run custom command, then use shortcut `Ctrl+Alt+E`, or press `F1` and then select/type `Run Custom Command`
+* To run Executable file, then use shortcut `Ctrl+Alt+K`, or press `F1` and then select/type `Run Executable` 
+
 
 ## Configuration
 
