@@ -144,7 +144,7 @@
 				{
 					"command": "code-runner.runExecutable",
 					"group": "navigation",
-					"when": "resourceExtname == .exe || resourceExtname == .doc || resourceExtname == .docx || resourceExtname == .zip"
+					"when": "resourceExtname == .exe || resourceExtname == .lnk"
 				}
 			],
 			"explorer/context": [
