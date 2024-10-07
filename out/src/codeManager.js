@@ -19,7 +19,6 @@ const vscode = require("vscode");
 const appInsightsClient_1 = require("./appInsightsClient");
 const constants_1 = require("./constants");
 const utility_1 = require("./utility");
-const { stdin, stdout } = require("process");
 const TmpDir = os.tmpdir();
 class CodeManager {
     constructor() {
@@ -63,52 +62,54 @@ class CodeManager {
         });
     }
     runExecutable(fileUri, extensionUri) {
-        let assistedTerminal;
-        if (!fileUri) {
-            const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
-            const tabInput = activeTab ? activeTab.input : null;
-            if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
-                fileUri = tabInput.uri;
+        return __awaiter(this, void 0, void 0, function* () {
+            let assistedTerminal = vscode.window.terminals.find (t => t.name==="Executable");
+            if (!fileUri) {
+                const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
+                const tabInput = activeTab ? activeTab.input : null;
+                if (tabInput instanceof vscode.TabInputText || tabInput instanceof vscode.TabInputCustom) {
+                    fileUri = tabInput.uri;
+                }
             }
-        }
-        if (!fileUri || fileUri.scheme !== 'file') {
-            vscode.window.showErrorMessage('Selected file is an invalid local file.');
-            return;
-        }
-        const filePath = (0, url_1.fileURLToPath)(fileUri.toString());
-        const isWin = process.platform === 'win32';
-        assistedTerminal = assistedTerminal || vscode.window.createTerminal({
-            name: 'Executable',
-            iconPath: {
-                light: vscode.Uri.joinPath(extensionUri, 'images', 'light.svg'),
-                dark: vscode.Uri.joinPath(extensionUri, 'images', 'dark.svg')
+            if (!fileUri || fileUri.scheme !== 'file') {
+                vscode.window.showErrorMessage('Selected file is an invalid local file.');
+                return;
             }
-        });
-        this.initialize();
-        const showAssistedTerminal = this._config.get("showAssistedTerminal");
-        if (this._config.get("clearAssistedTerminal")) {
-            assistedTerminal.sendText(isWin ? 'cls' : 'clear');
-        }
-        let command = '';
-        const directory = (0, path_1.dirname)(filePath);
-        command += `cd "${directory}" `;
-        const shellPath = assistedTerminal.creationOptions.shellPath || vscode.env.shell;
-        if (isWin && (shellPath.endsWith('powershell.exe') || shellPath.endsWith('pwsh.exe'))) {
-            command += '; start ';
-        }
-        else if (!isWin) {
-            command += this._config.get('compatibilityLayer') + ' ';
-        } else {
-            command+="& ";
-        }
-        assistedTerminal.sendText(`${command}"${filePath}"`);
-        if (showAssistedTerminal) {
-            assistedTerminal.show(this._config.get("preserveFocus"));
-        } else {setTimeout( () => {assistedTerminal.dispose();}, 5000);}
-        vscode.window.onDidCloseTerminal(closedTerminal => {
-            if (closedTerminal === assistedTerminal) {
-                assistedTerminal = undefined;
+            const filePath = (0, url_1.fileURLToPath)(fileUri.toString());
+            const isWin = process.platform === 'win32';
+            assistedTerminal = assistedTerminal || vscode.window.createTerminal({
+                name: 'Executable',
+                iconPath: {
+                    light: vscode.Uri.joinPath(extensionUri, 'images', 'light.svg'),
+                    dark: vscode.Uri.joinPath(extensionUri, 'images', 'dark.svg')
+                }
+            });
+            this.initialize();
+            const showAssistedTerminal = this._config.get("showAssistedTerminal");
+            if (this._config.get("clearPreviousOutput")) {
+                assistedTerminal.sendText(isWin ? 'cls' : 'clear');
             }
+            let command = '';
+            const cwd = (0, path_1.dirname)(filePath);
+            command += `cd "${cwd}" `;
+            const shellPath = assistedTerminal.creationOptions.shellPath || vscode.env.shell;
+            if (isWin && (shellPath.endsWith('powershell.exe') || shellPath.endsWith('pwsh.exe'))) {
+                command += '; start ';
+            }
+            else if (!isWin) {
+                command += this._config.get('compatibilityLayer') + ' ';
+            } else {
+                command+="& ";
+            }
+            assistedTerminal.sendText(`${command}"${filePath}"`);
+            if (showAssistedTerminal) {
+                assistedTerminal.show(this._config.get("preserveFocus"));
+            } else {setTimeout( () => {assistedTerminal.dispose();}, 5000);}
+            vscode.window.onDidCloseTerminal(closedTerminal => {
+                if (closedTerminal === assistedTerminal) {
+                    assistedTerminal = undefined;
+                }
+            });
         });
     }
     runCustomCommand() {
