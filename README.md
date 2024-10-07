@@ -1,3 +1,4 @@
+
 # Code Runner
 
 [![Join the chat at https://gitter.im/formulahendry/vscode-code-runner](https://badges.gitter.im/formulahendry/vscode-code-runner.svg)](https://gitter.im/formulahendry/vscode-code-runner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) ![Downloads](https://img.shields.io/visual-studio-marketplace/d/formulahendry.code-runner) ![Rating](https://img.shields.io/visual-studio-marketplace/r/formulahendry.code-runner) [![Actions Status](https://github.com/formulahendry/vscode-code-runner/actions/workflows/main.yml/badge.svg)](https://github.com/formulahendry/vscode-code-runner/actions/workflows/main.yml)
@@ -8,19 +9,19 @@ Run code snippet or code file for multiple languages: **C, C++, Java, JavaScript
 
 [《Visual Studio Code 权威指南》](https://union-click.jd.com/jdc?e=jdext-1261348777639735296-0&p=AyIGZRhbHQsWAVIaXxEyEgRdG1sRBxU3EUQDS10iXhBeGlcJDBkNXg9JHUlSSkkFSRwSBF0bWxEHFRgMXgdIMkRxFAUJD1RQZT0cBnwKDE4%2BaDpgB2ILWStbHAIQD1QaWxIBIgdUGlsRBxEEUxprJQIXNwd1g6O0yqLkB4%2B%2FjcePwitaJQIWD1cfWhwKGwVSG1wlAhoDZc31gdeauIyr%2FsOovNLYq46cqca50ytrJQEiXABPElAeEgRSG1kQCxQBUxxZHQQQA1YTXAkDIgdUGlscChECXRs1FGwSD1UbWRALFwRWK1slASJZOxoLRlUXU1NONU9QEkdXWRlJbBUDVB9TFgAVN1caWhcA)：带你深入浅出 VS Code！
 
-![Book](images/book.jpg)
+![Book](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/book.jpg)
 
 ## WeChat Official Account
 
 VS Code 的热门文章、使用技巧、插件推荐、插件开发攻略等，请关注“**玩转VS Code**”公众号！
 
-![WeChat](images/WeChatPublicAccount.jpg)
+![WeChat](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/WeChatPublicAccount.jpg)
 
 ## Donation
 
 If you like this extension, you could become a backer or sponsor via **[Patreon](https://www.patreon.com/junhan)**, donate via **[PayPal](https://www.paypal.me/junhanme)**, or scan below QR code to donate via **Alipay**. Any amount is welcome. It will encourage me to make this extension better and better!
 
-![Alipay](images/alipay.png)
+![Alipay](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/alipay.png)
 
 ## Features
 
@@ -35,7 +36,7 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
 * Set default language to run
 * Select language to run
 * Support REPL by running code in Integrated Terminal
-* Run executable files
+* Run Executable files
 
 ## Usages
 
@@ -45,21 +46,26 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
   * or right click the Text Editor and then click `Run Code` in editor context menu
   * or click `Run Code` button in editor title menu
   * or click `Run Code` button in context menu of file explorer
+* To run code in integrated terminal:
+  * use shortcut `Ctrl+Alt+SHIFT+N`
+  * or press `F1` and then select/type `Run Code in Terminal`, 
+  * or right click the Text Editor and then click `Run Code in Terminal` in editor context menu
+  * or click `Run Code in Terminal` button in editor title menu
+  * or click `Run Code in Terminal` button in context menu of file explorer
 * To stop the running code:
   * use shortcut `Ctrl+Alt+M`
   * or press `F1` and then select/type `Stop Code Run`
   * or click `Stop Code Run` button in editor title menu
   * or right click the Output Channel and then click `Stop Code Run` in context menu
 
-![Usage](images/usage.gif)
+![Usage](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/usage.gif)
 
 * To select language to run, use shortcut `Ctrl+Alt+J`, or press `F1` and then select/type `Run By Language`, then type or select the language to run: e.g `php, javascript, bat, shellscript...`
 
-![Usage](images/usageRunByLanguage.gif)
+![Usage](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/usageRunByLanguage.gif)
 
 * To run custom command, then use shortcut `Ctrl+Alt+E`, or press `F1` and then select/type `Run Custom Command`
 * To run Executable file, then use shortcut `Ctrl+Alt+K`, or press `F1` and then select/type `Run Executable` 
-
 
 ## Configuration
 
@@ -178,6 +184,24 @@ To set whether to preserve focus on code editor after code run is triggered (def
     "code-runner.preserveFocus": true
 }
 ```
+To set output encodings for specific languages ​​(the default is not set, the output will be decoded according to the "defaultDecode" item; if a value is set, the output will be decoded according to the value):
+```json
+{
+    "code-runner.decodeMap": {
+        "python": "cp1251",
+        "cpp":"utf8"
+    }
+}
+```
+To set the default output decodings (default is "cp1251", the output of unspecified languages ​​in decodeMap will be decoded according to cp1251; if set, the output will be decoded according to the value):
+```json
+{
+    "code-runner.defaultDecode": "utf8"
+}
+```
+`code-runner.showOutputTab`: Whether to show OutputTab while code is running. (Default **true**)
+
+`code-runner.showAssistedTerminal`: Whether to show OutputTab while executable is running. (Default **true**); if set, terminal will dispose after run executable file in five seconds
 
 `code-runner.ignoreSelection`: Whether to ignore selection to always run entire file. (Default is **false**)
 
@@ -195,6 +219,8 @@ To set whether to preserve focus on code editor after code run is triggered (def
 
 `code-runner.respectShebang`: Whether to respect Shebang to run code. (Default is **true**)
 
+`code-runner.compatibilityLayer`: Set compatibility layer to run .exe non-Windows platforms. (Default is "wine")
+
 ## About CWD Setting (current working directory)
 1. By default, use the `code-runner.cwd` setting
 2. If `code-runner.cwd` is not set and `code-runner.fileDirectoryAsCwd` is `true`, use the directory of the file to be executed
@@ -208,15 +234,15 @@ To set whether to preserve focus on code editor after code run is triggered (def
 * To run Clojure, you need to install [Leiningen](https://leiningen.org/) and [lein-exec](https://github.com/kumarshantanu/lein-exec)
 
 ## Telemetry data
-By default, telemetry data collection is turned on to understand user behavior to improve this extension. To disable it, update the settings.json as below:
+By default, telemetry data collection is turned off, but you can enable it to understand user behavior to improve this extension. To enable it, update the settings.json as below:
 ```json
 {
-    "code-runner.enableAppInsights": false
+    "code-runner.enableAppInsights": true
 }
 ```
 
 ## Change Log
-See Change Log [here](CHANGELOG.md)
+See Change Log [here](https://github.com/formulahendry/vscode-code-runner/blob/HEAD/CHANGELOG.md)
 
 ## Issues
 Submit the [issues](https://github.com/formulahendry/vscode-code-runner/issues) if you find any bug or have any suggestion.
