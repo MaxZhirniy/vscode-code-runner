@@ -209,7 +209,7 @@ To set the default output decodings (default is "cp1251", the output of unspecif
 ```
 `code-runner.showOutputTab`: Whether to show OutputTab while code is running. (Default **true**)
 
-`code-runner.showAssistedTerminal`: Whether to show OutputTab while executable is running. (Default **true**); if set, terminal will dispose after run executable file in five seconds
+`code-runner.showAssistedTerminal`: Whether to show Terminal while executable is running. (Default **true**); if set **false**, terminal will dispose after run executable file in five seconds
 
 `code-runner.ignoreSelection`: Whether to ignore selection to always run entire file. (Default is **false**)
 
