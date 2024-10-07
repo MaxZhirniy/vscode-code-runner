@@ -52,19 +52,22 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
   * or right click the Text Editor and then click `Run Code in Terminal` in editor context menu
   * or click `Run Code in Terminal` button in editor title menu
   * or click `Run Code in Terminal` button in context menu of file explorer
-* To run Executable file:
-  * use shortcut `Ctrl+Alt+K`
-  * or press `F1` and then select/type `Run Executable`, 
-  * or right click the Text Editor and then click `Run Executable` in editor context menu
-  * or click `Run Executable` button in editor title menu
-  * or click `Run Executable` button in context menu of file explorer 
 * To stop the running code:
   * use shortcut `Ctrl+Alt+M`
   * or press `F1` and then select/type `Stop Code Run`
   * or click `Stop Code Run` button in editor title menu
   * or right click the Output Channel and then click `Stop Code Run` in context menu
 
-![Usage](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/usage.gif)
+![Usage](https://github.com/MaxZhirniy/vscode-code-runner/raw/HEAD/images/usage.gif)
+
+* To run Executable file:
+  * use shortcut `Ctrl+Alt+K`
+  * or press `F1` and then select/type `Run Executable`, 
+  * or right click the Text Editor and then click `Run Executable` in editor context menu
+  * or click `Run Executable` button in editor title menu
+  * or click `Run Executable` button in context menu of file explorer 
+
+![Usage](https://github.com/MaxZhirniy/vscode-code-runner/raw/HEAD/images/RunExecutable.gif)
 
 * To select language to run, use shortcut `Ctrl+Alt+J`, or press `F1` and then select/type `Run By Language`, then type or select the language to run: e.g `php, javascript, bat, shellscript...`
 
