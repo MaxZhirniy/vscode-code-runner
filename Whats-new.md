@@ -6,4 +6,5 @@ What's new:
 * Added the ability to decode the output for each language
 * Added the ability to select a standard encoding if there is no configuration for the language
 * Perhaps some minor changes that I forgot to mention.
+
   **Check ReadMe for looking through all the possibilities**
