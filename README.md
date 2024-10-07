@@ -52,6 +52,12 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
   * or right click the Text Editor and then click `Run Code in Terminal` in editor context menu
   * or click `Run Code in Terminal` button in editor title menu
   * or click `Run Code in Terminal` button in context menu of file explorer
+* To run Executable file:
+  * use shortcut `Ctrl+Alt+K`
+  * or press `F1` and then select/type `Run Executable`, 
+  * or right click the Text Editor and then click `Run Executable` in editor context menu
+  * or click `Run Executable` button in editor title menu
+  * or click `Run Executable` button in context menu of file explorer 
 * To stop the running code:
   * use shortcut `Ctrl+Alt+M`
   * or press `F1` and then select/type `Stop Code Run`
@@ -65,7 +71,6 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
 ![Usage](https://github.com/formulahendry/vscode-code-runner/raw/HEAD/images/usageRunByLanguage.gif)
 
 * To run custom command, then use shortcut `Ctrl+Alt+E`, or press `F1` and then select/type `Run Custom Command`
-* To run Executable file, then use shortcut `Ctrl+Alt+K`, or press `F1` and then select/type `Run Executable` 
 
 ## Configuration
 
