@@ -30,9 +30,11 @@ class CodeManager {
     onDidCloseTerminal() {
         this._terminal = null;
     }
-    run(languageId = null, fileUri = null, runMode = null) {
+    run(languageId = null, fileUri = null, runMode = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this._isRunning && !runMode) {
+            this.initialize();
+            const inTerminal = runMode ? !(this._config.get("runInTerminal")) : (this._config.get("runInTerminal"));
+            if (this._isRunning && !inTerminal) {
                 vscode.window.showInformationMessage("Code is already running!");
                 return;
             }
@@ -46,11 +48,14 @@ class CodeManager {
                     this._document = editor.document;
                 }
                 else {
-                    vscode.window.showInformationMessage("No code found or selected.");
-                    return;
+                    if (this._config.get("forceRun")) {
+                        this.runExecutable(fileUri);
+                    } else {
+                        vscode.window.showInformationMessage("No code found or selected.");
+                        return; 
+                    }
                 }
             }
-            this.initialize();
             const fileExtension = path_1.extname(this._document.fileName);
             const executor = this.getExecutor(languageId, fileExtension);
             // undefined or null
@@ -58,10 +63,10 @@ class CodeManager {
                 vscode.window.showInformationMessage("Code language not supported or defined.");
                 return;
             }
-            this.getCodeFileAndExecute(fileExtension, executor, true,runMode);
+            this.getCodeFileAndExecute(fileExtension, executor, true, runMode);
         });
     }
-    runExecutable(fileUri, extensionUri) {
+    runExecutable(fileUri = null, extensionUri = this.getDefaultExtUri() ) {
         return __awaiter(this, void 0, void 0, function* () {
             this.initialize();
             fileUri = this.getFileUri(fileUri);
@@ -74,7 +79,9 @@ class CodeManager {
             assistedTerminal.sendText(command);
             if (this._config.get("showAssistedTerminal")) {
                 assistedTerminal.show(this._config.get("preserveFocus"));
-            } else {setTimeout( () => {assistedTerminal.dispose();}, 5000);}
+            } else {
+                setTimeout( () => { assistedTerminal.dispose(); }, 5000);
+            }
         });
     }
     runCustomCommand() {
@@ -154,7 +161,7 @@ class CodeManager {
         }
         this._cwd = TmpDir;
     }
-    initAssistedTerminal(extensionUri = ""){
+    initAssistedTerminal(extensionUri){
         let terminal;
         terminal = vscode.window.terminals.find (t => t.name==="Executable");
         if (!terminal) {
@@ -179,6 +186,11 @@ class CodeManager {
         }
         command += `"${filePath}"`
         return this.changeExecutorFromCmdToPs(command, 0);
+    }
+    getDefaultExtUri(){
+        let extensionUri = path_1.resolve(__dirname, "../../");
+        extensionUri = vscode.Uri.file(extensionUri);
+        return extensionUri;
     }
     getFileUri(fileUri = null) {
         if (!fileUri) {
@@ -219,12 +231,12 @@ class CodeManager {
             this._codeFile = this._document.fileName;
             if (this._config.get("saveAllFilesBeforeRun")) {
                 return vscode.workspace.saveAll().then(() => {
-                    (!runMode) ? this.executeCommand(executor, appendFile) : this.executeCommandInTerminal(executor, appendFile);
+                    this.executeCommand(executor, appendFile, runMode);
                 });
             }
             if (this._config.get("saveFileBeforeRun")) {
                 return this._document.save().then(() => {
-                    (!runMode) ? this.executeCommand(executor, appendFile) : this.executeCommandInTerminal(executor, appendFile);
+                    this.executeCommand(executor, appendFile, runMode);
                 });
             }
         }
@@ -241,7 +253,7 @@ class CodeManager {
             const folder = this._document.isUntitled ? this._cwd : path_1.dirname(this._document.fileName);
             this.createRandomFile(text, folder, fileExtension);
         }
-        (!runMode) ? this.executeCommand(executor, appendFile) : this.executeCommandInTerminal(executor, appendFile);
+        this.executeCommand(executor, appendFile, runMode);
     }
     rndName() {
         return Math.random().toString(36).replace(/[^a-z]+/g, "").substr(0, 10);
@@ -306,8 +318,8 @@ class CodeManager {
         }
         return executor;
     }
-    executeCommand(executor, appendFile = true) {
-        if (this._config.get("runInTerminal")) {
+    executeCommand(executor, appendFile = true, runMode = false) {
+        if (runMode ? !this._config.get("runInTerminal") : this._config.get("runInTerminal")) {
             this.executeCommandInTerminal(executor, appendFile);
         }
         else {
@@ -452,7 +464,8 @@ class CodeManager {
                 this._terminal = vscode.window.createTerminal("Code");
                 isNewTerminal = true;
             }
-            this._terminal.show(this._config.get("preserveFocus"));
+            
+            if (this._config.get("showOutputTab")) { this._terminal.show(this._config.get("preserveFocus"));}
             this.sendRunEvent(executor, true);
             executor = this.changeExecutorFromCmdToPs(executor);
             let command = yield this.getFinalCommandToRunCodeFile(executor, appendFile);
