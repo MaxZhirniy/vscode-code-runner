@@ -13,7 +13,10 @@ function activate(context) {
     const runCustomCommand = vscode.commands.registerCommand("code-runner.runCustomCommand", () => {
         codeManager.runCustomCommand();
     });
-    const runInTerminal = vscode.commands.registerCommand("code-runner.runInTerminal", (fileUri) => {
+    const runinTerminal = vscode.commands.registerCommand("code-runner.runinTerminal", (fileUri) => {
+        codeManager.run(null, fileUri, true);
+    });
+    const runinOutput = vscode.commands.registerCommand("code-runner.runinOutput", (fileUri) => {
         codeManager.run(null, fileUri, true);
     });
     const runExecutable = vscode.commands.registerCommand("code-runner.runExecutable", (fileUri) => {
@@ -29,7 +32,8 @@ function activate(context) {
     context.subscriptions.push(runCustomCommand);
     context.subscriptions.push(runByLanguage);
     context.subscriptions.push(stop);
-    context.subscriptions.push(runInTerminal);
+    context.subscriptions.push(runinTerminal);
+    context.subscriptions.push(runinOutput);
     context.subscriptions.push(runExecutable);
     context.subscriptions.push(codeManager);
 }
