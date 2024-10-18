@@ -2,7 +2,7 @@
 	"name": "code-runner",
 	"displayName": "Code Runner",
 	"description": "Run C, C++, Java, JS, PHP, Python, Perl, Ruby, Go, Lua, Groovy, PowerShell, CMD, BASH, F#, C#, VBScript, TypeScript, CoffeeScript, Scala, Swift, Julia, Crystal, OCaml, R, AppleScript, Elixir, VB.NET, Clojure, Haxe, Obj-C, Rust, Racket, Scheme, AutoHotkey, AutoIt, Kotlin, Dart, Pascal, Haskell, Nim, D, Lisp, Kit, V, SCSS, Sass, CUDA, Less, Fortran, Ring, Standard ML, Zig, Mojo, Erlang, SPWN, Pkl, Gleam",
-	"version": "0.12.21",
+	"version": "0.12.3",
 	"featureFlags": {
 		"usingNewPythonInterpreterPathApi": true,
 		"usingNewPythonInterpreterPathApiV2": true
@@ -22,7 +22,10 @@
 		"python",
 		"perl",
 		"ruby",
-		"multi-root ready"
+		"multi-root ready",
+		"cpp",
+		"executable",
+		"exe"
 	],
 	"bugs": {
 		"url": "https://github.com/formulahendry/vscode-code-runner/issues",
@@ -38,7 +41,8 @@
 	},
 	"activationEvents": [
 		"onCommand:code-runner.runExecutable",
-		"onCommand:code-runner.runInTerminal",
+		"onCommand:code-runner.runinTerminal",
+		"onCommand:code-runner.runinOutput",
 		"onCommand:code-runner.run",
 		"onCommand:code-runner.runCustomCommand",
 		"onCommand:code-runner.runByLanguage",
@@ -53,8 +57,13 @@
 				"icon": "$(play)"
 			},
 			{
-				"command": "code-runner.runInTerminal",
+				"command": "code-runner.runinTerminal",
 				"title": "Run Code in Terminal",
+				"icon": "$(debug-coverage)"
+			},
+			{
+				"command": "code-runner.runinOutput",
+				"title": "Run Code in Output",
 				"icon": "$(debug-coverage)"
 			},
 			{
@@ -85,7 +94,13 @@
 				"key": "ctrl+alt+n"
 			},
 			{
-				"command": "code-runner.runInTerminal",
+				"when": "!inOutput && config.code-runner.registerAlternateRun && connfig.code-runner.runInTerminal",
+				"command": "code-runner.runinOutput",
+				"key": "ctrl+alt+shift+n"
+			},
+			{
+				"when": "!inOutput && config.code-runner.registerAlternateRun && !connfig.code-runner.runInTerminal",
+				"command": "code-runner.runinTerminal",
 				"key": "ctrl+alt+shift+n"
 			},
 			{
@@ -113,8 +128,13 @@
 					"group": "navigation"
 				},
 				{
-					"when": "!inOutput && config.code-runner.showRunCommandInEditorContextMenu",
-					"command": "code-runner.runInTerminal",
+					"when": "config.code-runner.showRunCommandInEditorContextMenu && !inOutput && config.code-runner.registerAlternateRun && !config.code-runner.runInTerminal",
+					"command": "code-runner.runinTerminal",
+					"group": "navigation"
+				},
+				{
+					"when": "config.code-runner.showRunCommandInEditorContextMenu && !inOutput && config.code-runner.registerAlternateRun && config.code-runner.runInTerminal",
+					"command": "code-runner.runinOutput",
 					"group": "navigation"
 				},
 				{
@@ -130,8 +150,13 @@
 					"group": "navigation"
 				},
 				{
-					"when": "config.code-runner.showRunIconInEditorTitleMenu",
-					"command": "code-runner.runInTerminal",
+					"when": "config.code-runner.showRunIconInEditorTitleMenu && config.code-runner.registerAlternateRun && !config.code-runner.runInTerminal",
+					"command": "code-runner.runinTerminal",
+					"group": "navigation"
+				},
+				{
+					"when": "config.code-runner.showRunIconInEditorTitleMenu && config.code-runner.registerAlternateRun && config.code-runner.runInTerminal",
+					"command": "code-runner.runinOutput",
 					"group": "navigation"
 				}
 			],
@@ -159,8 +184,13 @@
 					"group": "explorer"
 				},
 				{
-					"when": "!explorerResourceIsFolder && config.code-runner.showRunCommandInExplorerContextMenu",
-					"command": "code-runner.runInTerminal",
+					"when": "!explorerResourceIsFolder && config.code-runner.showRunCommandInExplorerContextMenu && config.code-runner.registerAlternateRun && !config.code-runner.runInTerminal",
+					"command": "code-runner.runinTerminal",
+					"group": "navigation"
+				},
+				{
+					"when": "!explorerResourceIsFolder && config.code-runner.showRunCommandInExplorerContextMenu && config.code-runner.registerAlternateRun && config.code-runner.runInTerminal",
+					"command": "code-runner.runinOutput",
 					"group": "navigation"
 				}
 			]
@@ -354,6 +384,12 @@
 					"description": "Whether to run code in Integrated Terminal.",
 					"scope": "resource"
 				},
+				"code-runner.registerAlternateRun": {
+					"type": "boolean",
+					"default": true,
+					"description": "Registers a command to execute code in the opposite context: in the terminal if `runInTerminal` is false, otherwise in the output panel.",
+					"scope": "resource"
+				},
 				"code-runner.terminalRoot": {
 					"type": "string",
 					"default": "",
@@ -408,29 +444,29 @@
 					"description": "Whether to respect Shebang to run code.",
 					"scope": "resource"
 				},
-				"code-runner.showOutputTab" : {
+				"code-runner.showOutputTab": {
 					"type": "boolean",
 					"default": true,
-					"description": "Show output tab during code execution.",
+					"description": "Show output tab or terminal during code execution.",
 					"scope": "resource"
 				},
-				"code-runner.decodeMap" : {
-					"type":"object",
-					"default":{},
-					"description": "Set the decoding of the output for each language. Default: utf-8.",
+				"code-runner.decodeMap": {
+					"type": "object",
+					"default": {},
+					"description": "Set the decoding of the output for each language. If not set, will be used `defaultDecode`.",
 					"scope": "resource"
 				},
-				"code-runner.defaultDecode" : {
-					"type":"string",
-					"enum":["cp1251", "cp1252", "utf8"],
-					"default":"cp1251",
+				"code-runner.defaultDecode": {
+					"type": "string",
+					"enum": [
+						"cp1251",
+						"cp1252", 
+						"cp866", 
+						"cp437", 
+						"utf8"
+					],
+					"default": "cp1251",
 					"description": "Set the default decoding of the output.",
-					"scope": "resource"
-				},
-				"code-runner.clearAssistedTerminal": {
-					"type": "boolean",
-					"default": false,
-					"description": "Clear the terminal before each run executable.",
 					"scope": "resource"
 				},
 				"code-runner.compatibilityLayer": {
@@ -442,7 +478,14 @@
 				"code-runner.showAssistedTerminal": {
 					"type":"boolean",
 					"default": true,
-					"description": "Show assisted terminal during runtime executable."
+					"description": "Show assisted terminal during runtime executable.",
+					"scope": "resource"
+				},
+				"code-runner.forceRun": {
+					"type":"boolean",
+					"default": true, 
+					"description": "If can't get the code, run the file as executable",
+					"scope": "resource" 
 				}
 			}
 		},
