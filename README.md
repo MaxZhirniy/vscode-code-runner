@@ -40,18 +40,27 @@ If you like this extension, you could become a backer or sponsor via **[Patreon]
 
 ## Usages
 
-* To run code:
+* To run code (or executable, if `forceRun` is **true**):
   * use shortcut `Ctrl+Alt+N`
   * or press `F1` and then select/type `Run Code`, 
   * or right click the Text Editor and then click `Run Code` in editor context menu
   * or click `Run Code` button in editor title menu
   * or click `Run Code` button in context menu of file explorer
-* To run code in integrated terminal:
-  * use shortcut `Ctrl+Alt+SHIFT+N`
-  * or press `F1` and then select/type `Run Code in Terminal`, 
-  * or right click the Text Editor and then click `Run Code in Terminal` in editor context menu
-  * or click `Run Code in Terminal` button in editor title menu
-  * or click `Run Code in Terminal` button in context menu of file explorer
+
+* To run code (or executable, if `forceRun` is **true**) in the opposite context:
+  * If the current mode is set to run in terminal, use:
+    * Use shortcut `Ctrl+Alt+SHIFT+N`
+    * Press `F1` and select/type `Run Code in Output`
+    * Right-click the Text Editor and select `Run Code in Output` from the context menu
+    * Click the `Run Code in Output` button in the editor title menu
+    * Click the `Run Code in Output` button in the file explorer context menu
+  * If the current mode is set to run in output:
+    * Use shortcut `Ctrl+Alt+SHIFT+N`
+    * Press `F1` and select/type `Run Code in Terminal`
+    * Right-click the Text Editor and select `Run Code in Terminal` from the context menu
+    * Click the `Run Code in Terminal` button in the editor title menu
+    * Click the `Run Code in Terminal` button in the file explorer context menu
+
 * To stop the running code:
   * use shortcut `Ctrl+Alt+M`
   * or press `F1` and then select/type `Stop Code Run`
@@ -207,7 +216,9 @@ To set the default output decodings (default is "cp1251", the output of unspecif
     "code-runner.defaultDecode": "utf8"
 }
 ```
-`code-runner.showOutputTab`: Whether to show OutputTab while code is running. (Default **true**)
+`code-runner.showOutputTab`: Whether to show OutputTab or terminal while code is running. (Default **true**)
+
+`code-runner.registerAlternateRun`: Wheter to register a command to run the code in the opposite context: in the terminal if `runInTerminal` is false, otherwise in the output panel. (Default **true**)
 
 `code-runner.showAssistedTerminal`: Whether to show Terminal while executable is running. (Default **true**); if set **false**, terminal will dispose after run executable file in five seconds
 
@@ -228,6 +239,8 @@ To set the default output decodings (default is "cp1251", the output of unspecif
 `code-runner.respectShebang`: Whether to respect Shebang to run code. (Default is **true**)
 
 `code-runner.compatibilityLayer`: Set compatibility layer to run .exe non-Windows platforms. (Default is "wine")
+
+`code-runner.forceRun`: Wheter to run the file as executable if the code in it could not be identified. (Default **true**)
 
 ## About CWD Setting (current working directory)
 1. By default, use the `code-runner.cwd` setting
